@@ -82,38 +82,45 @@ class Record:
 class AddressBook(UserDict):
     import pickle
 
-    def save_data(book, filename="addressbook.pkl"):
+    def save_data(self, filename="addressbook.pkl"):
         with open(filename, "wb") as f:
-            pickle.dump(book, f)
+            pickle.dump(self.data, f)
+        print(f"Data saved to {filename}")
 
-    def load_data(filename="addressbook.pkl"):
+    def load_data(book,filename="addressbook.pkl"):
         try:
             with open(filename, "rb") as f:
-                return pickle.load(f)
+                book.data = pickle.load(f)
         except FileNotFoundError:
-            return AddressBook()
+            pass
     
     def main():
         book = AddressBook()
+        book.load_data()
         print("Welcome to the assistant bot!")
         while True:
             user_input = input("Enter a command: ")
             command, args = parse_input(user_input)
 
             if command in ["close", "exit"]:
+                book.save_data()  
                 print("Good bye!")
                 break
 
             elif command == "hello":
+                book.save_data()
                 print("How can I help you?")
 
             elif command == "add":
+                book.save_data()
                 print(add_contact(args, book))
 
             elif command == "change":
+                book.save_data()
                 print(change_contact(args, book))
 
             elif command == "phone":
+                book.save_data()
                 if len(args) != 1:
                     print("Invalid command format. Use 'phone [name]'")
                 else:
@@ -124,20 +131,25 @@ class AddressBook(UserDict):
                         print(f"Phone number for {name}: {book[name]}")
                     
             elif command == "all":
+                book.save_data()
                 print(show_all(book))
 
             elif command == "add-birthday":
+                book.save_data()
                 print(add_birthday(args, book))
             
             elif command == "show-birthday":
+                book.save_data()
                 print(show_birthday(args, book))
 
             elif command == "birthdays":
+                book.save_data()
                 print(birthdays(args, book))
 
             else:
+                book.save_data()
                 print("Invalid command.")
-            
+
     
     @staticmethod
     def find_next_weekday(d, weekday: int):
